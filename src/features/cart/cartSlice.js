@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchItems,addItem,updateItem,deleteItem } from './cartApi';
-import { fetchAsync } from '../products/productsSlice';
+import axios from 'axios';
+import { fetchItems } from './cartApi';
+import { deleteItem } from './cartApi';
+import { addItem } from './cartApi';
+import { updateItem } from './cartApi';
 
 const initialState = {
   items: [],
@@ -8,33 +11,30 @@ const initialState = {
 };
 
 export const addAsync = createAsyncThunk(
-  'cart/addItems',
+  'cart/fetchItem',
   async (item) => {
-    const response = await fetchcart(item);
+    const response = await addItem(item) // API endpoint should be updated accordingly
     return response.data;
   }
 );
 
-export const cartSlice = createSlice({
+const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAsync.pending, (state) => {
+      .addCase(addAsync.pending, (state) => {
         state.status = 'loading';
-      })
-      .addCase(fetchAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.items = action.payload;
       })
       .addCase(addAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.items.push(action.payload)
+        state.items.push(action.payload);
+      })
+      .addCase(addAsync.rejected, (state) => {
+        state.status = 'failed';
       });
   },
 });
-
-// export const { } = cartSlice.actions;
 
 export default cartSlice.reducer;

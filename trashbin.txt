@@ -1,3 +1,239 @@
+fect(()=>{
+    dispatch(fetchAsync());
+  })
+ 
+
+  useEffect(()=>{
+    dispatch(fetchAsync());
+  },[])
+ 
+axios.post('/api/cart', item);
+ 
+
+import {fetchI}
+ 
+// store.js
+import { configureStore } from '@reduxjs/toolkit';
+import productsReducer from '../features/products/productsSlice';
+import cartReducer from '../features/cart/cartSlice'
+
+const store = configureStore({
+  reducer: {
+    products: productsReducer,
+    cart:cartReducer
+    // Add other reducers here if needed
+  },
+});
+
+export default store;
+
+ 
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { fetchAsync } from "../products/productsSlice";
+
+export function Cart() {
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.cart.items);
+  useEffect(() => {
+    dispatch(fetchAsync());
+  }, []);
+
+  return (
+    <>
+      {items.map((item) => {
+        return (
+          <div className="card" style={{marginRight: 'em'}}>
+            <img className="card-img-top" src={item.thumbnail} alt="Card image cap" style={{width:"200px"}} />
+            <div className="card-body">
+              <h5 className="card-title">{item.title}</h5>
+              <p className="card-text">{item.description}
+              </p>
+              <a href="#" className="btn btn-primary">
+                Go somewhere
+              </a>
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+ 
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchAsync } from "./productsSlice";
+import '../products/Card.css';
+import { addAsync } from '../cart/cartSlice';
+
+export function Products() {
+  const dispatch = useDispatch();
+  const products = useSelector(state => state.products.products);
+
+  return (
+    <>
+      <button onClick={() => dispatch(fetchAsync())}>Fetch Products</button>
+      {products.map(product => (
+        <div className="card" key={product.id}>
+          <img src={product.thumbnail} alt={product.title} style={{ width: '100%' }} />
+          <h1>{product.title}</h1>
+          <p className="price">{product.price}</p>
+          <p>{product.description}</p>
+          <p>
+            <button onClick={()=>dispatch(addAsync(product))}>Add to Cart</button>
+          </p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+ 
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { fetchItems,addItem,updateItem,deleteItem } from './cartApi';
+import { fetchAsync } from '../products/productsSlice';
+
+const initialState = {
+  items: [],
+  status: 'idle',
+};
+
+export const addAsync = createAsyncThunk(
+  'cart/addItem',
+  async (item) => {
+    const {price,id,title,brand}=item
+    const response = await addItem({price,id,title,brand});
+    return response.data;
+  }
+);
+
+export const cartSlice = createSlice({
+  name: 'cart',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.items = action.payload;
+      })
+      .addCase(addAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.items.push(action.payload)
+      });
+  },
+});
+
+// export const { } = cartSlice.actions;
+
+export default cartSlice.reducer;
+
+ 
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { fetchProducts } from './productsApi';
+
+const initialState = {
+  products: [],
+  status: 'idle',
+};
+
+export const fetchAsync = createAsyncThunk(
+  'products/fetchProducts',
+  async () => {
+    const response = await fetchProducts();
+    return response.data;
+  }
+);
+
+export const productsSlice = createSlice({
+  name: 'products',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.products = action.payload;
+      });
+  },
+});
+
+// export const { } = productsSlice.actions;
+
+export default productsSlice.reducer;
+
+ 
+para
+ 
+
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
+ 
+Card title
+ 
+spacing +
+ 
+"width: 18rem;"
+ 
+class
+ 
+
+</div>
+ 
+ <>
+              <h1>{item.price}</h1>
+            </>
+ 
+
+            <>
+ 
+
+            </>
+ 
+
+              <h1>{item.price}</h1>
+ 
+
+          <p>
+            <button onClick={()=>dispatch(addAsync(product))}>Add to Cart</button>
+          </p>
+ 
+return (
+            <>
+              <h1>{item.price}</h1>
+            </>
+          )
+ 
+../products/productsSlice
+ 
+
+import { fetchAsync } from '../products/productsSlice';
+ 
+this is cart item
+ 
+
+              <h2>apple</h2>
+ 
+
+import { fetchAsync } from '../products copy/productsSlice';
+ 
+
+// import { fetchAsync } from "./productsSlice";
+ 
+
+import '../cart/Card.css';
+ 
+item
+ 
+fetchcart
+ 
 ./products
  
 Products

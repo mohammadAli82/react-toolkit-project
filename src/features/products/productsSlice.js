@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchProducts } from './productsApi';
 
 const initialState = {
   products: [],
@@ -9,12 +8,13 @@ const initialState = {
 export const fetchAsync = createAsyncThunk(
   'products/fetchProducts',
   async () => {
-    const response = await fetchProducts();
-    return response.data;
+    const response = await fetch('https://fakestoreapi.com/products');
+    const data = await response.json();
+    return data;
   }
 );
 
-export const productsSlice = createSlice({
+const productsSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {},
@@ -26,10 +26,11 @@ export const productsSlice = createSlice({
       .addCase(fetchAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.products = action.payload;
+      })
+      .addCase(fetchAsync.rejected, (state) => {
+        state.status = 'failed';
       });
   },
 });
-
-// export const { } = productsSlice.actions;
 
 export default productsSlice.reducer;
